@@ -68,23 +68,16 @@ class Blockchain {
            let chainHeight = getChainHeight();
            // get the lst block using chain heigh
            let prevBlock = getBlockByHeight(chainHeight);
-           //set var for last block's heigh and time for check
+           //set var for last block's heigh
            let prevBlockHeight = prevBlock.height;
-           let prevBlockTime = prevBlock.time;
            // set current block's time stamp
            block.time = new Date().getTime().toString().slice(0,-3);
-           let curBlockTime = block.time;
-           // set var to get time diff of prev block and current block
-           //let timeDiff = curBlockTime - prevBlockTime / 1000; 
-
            block.previousBlockHash = prevBlock.hash;
            block.height = prevBlockHeight + 1;
-           // if(block.height <= prevBlockHeight && timeDiff >= 500 )
+
             if(block.height <= prevBlockHeight)
-            
             {
-               // reject(new error("this block is not in correct place check block height"));
-               reject();
+               reject(new error("this block is not in correct place check block height"));
             }else{
                 block.hash = SHA256(JSON.stringify(block)).toString();
                 self.height++;
@@ -130,7 +123,20 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-            
+          let messageTime =  parseInt(message.split(':')[1]);
+          let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+          let timeDifference = currentTime - messageTime; 
+          if(timeDifference >= 300){
+            if(bitcoinMessage.verify(message, address, signature)){
+                let block = new BlockClass.Block({data: {"star":star,"owner":address}});
+                await this._addBlock(block);
+                resolve(block);
+            }else{
+                reject(new error('failed to verify message'));
+            }
+          }else{
+              reject(new error('it has beeen greater than 5 minutes'));
+          }
         });
     }
 
