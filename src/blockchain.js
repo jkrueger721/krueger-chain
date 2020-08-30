@@ -72,7 +72,7 @@ class Blockchain {
            let prevBlockHeight = prevBlock.height;
            let prevBlockTime = prevBlock.time;
            // set current block's time stamp
-           block.time = new Date().getTime();
+           block.time = new Date().getTime().toString().slice(0,-3);
            let curBlockTime = block.time;
            // set var to get time diff of prev block and current block
            //let timeDiff = curBlockTime - prevBlockTime / 1000; 
@@ -83,7 +83,6 @@ class Blockchain {
             if(block.height <= prevBlockHeight)
             
             {
-
                // reject(new error("this block is not in correct place check block height"));
                reject();
             }else{
@@ -106,8 +105,9 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            
-        });
+                resolve(address + ':' + new Date().getTime().toString().slice(0, -3) + ':starRegistery')
+            });
+   
     }
 
     /**
