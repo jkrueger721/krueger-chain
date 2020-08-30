@@ -64,13 +64,22 @@ class Blockchain {
     _addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-           let block = new Block();
-        //    let newBlockHeight = self.height + 1;
-           let height = self.height;
-           let previousBlock = self.chain[height];
-           let prevBlockHash = previousBlock.hash;
-           block.previousBlockHash = prevBlockHash;
-           block.height = newBlockHeight;
+         
+           let chainHeight = getChainHeight();
+           let prevBlock = getBlockByHeight(chainHeight);
+           let prevBlockHeight = prevBlock.height;
+           block.time = new Date().getTime();
+
+           block.previousBlockHash = prevBlock.hash;
+           block.height = prevBlockHeight + 1;
+           block.hash = SHA256(JSON.stringify(block)).toString();
+            if(block.height <= prevBlockHeight){
+
+                reject(new error("this block is not in correct place check block height"));
+            }else{
+                self.chain.push(block);
+                resolve();
+            }
         });
         
     }
