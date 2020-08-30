@@ -75,11 +75,14 @@ class Blockchain {
            block.time = new Date().getTime();
            let curBlockTime = block.time;
            // set var to get time diff of prev block and current block
-           let timeDiff = curBlockTime - prevBlockTime / 1000; 
+           //let timeDiff = curBlockTime - prevBlockTime / 1000; 
 
            block.previousBlockHash = prevBlock.hash;
            block.height = prevBlockHeight + 1;
-            if(block.height <= prevBlockHeight && timeDiff >= 500 ){
+           // if(block.height <= prevBlockHeight && timeDiff >= 500 )
+            if(block.height <= prevBlockHeight)
+            
+            {
 
                // reject(new error("this block is not in correct place check block height"));
                reject();
