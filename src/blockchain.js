@@ -65,15 +65,15 @@ class Blockchain {
         let self = this;
         return new Promise(async (resolve, reject) => {
            // get the current chain height       
-           let chainHeight = getChainHeight();
+           let chainHeight = this.getChainHeight();
            // get the lst block using chain heigh
-           let prevBlock = getBlockByHeight(chainHeight);
+           let prevBlock = this.getBlockByHeight(chainHeight);
            //set var for last block's heigh
            let prevBlockHeight = prevBlock.height;
            // set current block's time stamp
            block.time = new Date().getTime().toString().slice(0,-3);
            block.previousBlockHash = prevBlock.hash;
-           block.height = prevBlockHeight + 1;
+           //block.height = prevBlockHeight + 1;
 
             if(block.height <= prevBlockHeight)
             {
@@ -149,7 +149,8 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-           
+            let currentBlock = self.chain.filter(block => block.hash);
+            resolve(currentBlock);
         });
     }
 
