@@ -48,12 +48,8 @@ class Block {
                 reject();
             }else{
                 // Returning the Block is valid
-
                 resolve(self);
-               // return self;
             }
-        
-        
         });
     }
 

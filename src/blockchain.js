@@ -100,7 +100,6 @@ class Blockchain {
         return new Promise((resolve) => {
                 resolve(address + ':' + new Date().getTime().toString().slice(0, -3) + ':starRegistery')
             });
-   
     }
 
     /**
@@ -149,7 +148,7 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let currentBlock = self.chain.filter(block => block.hash);
+            let currentBlock = self.chain.filter(block => block.hash = hash);
             resolve(currentBlock);
         });
     }
@@ -181,7 +180,15 @@ class Blockchain {
         let self = this;
         let stars = [];
         return new Promise((resolve, reject) => {
-            
+           self.chain.forEach(b => {
+              let data = b.getBData();
+              if(data){
+                  if(data.owner === address){
+                      stars.push(data);
+                  }
+              }
+          })
+          resolve(stars);
         });
     }
 
