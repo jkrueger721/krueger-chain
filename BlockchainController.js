@@ -62,8 +62,10 @@ class BlockchainController {
                 const message = req.body.message;
                 const signature = req.body.signature;
                 const star = req.body.star;
+
                 try {
                     let block = await this.blockchain.submitStar(address, message, signature, star);
+                  
                     if(block){
                         return res.status(200).json(block);
                     } else {
@@ -99,7 +101,7 @@ class BlockchainController {
 
     // This endpoint allows you to request the list of Stars registered by an owner
     getStarsByOwner() {
-        this.app.get("/blocks/:address", async (req, res) => {
+        this.app.get("/blocks/address/:address", async (req, res) => {
             if(req.params.address) {
                 const address = req.params.address;
                 try {

@@ -152,16 +152,16 @@ class Blockchain {
           let messageTime =  parseInt(message.split(':')[1]);
           let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
           let timeDifference = currentTime - messageTime; 
-          if(timeDifference >= 30000){
+          if(timeDifference >= 300){
             if(bitcoinMessage.verify(message, address, signature)){
                 let block = new BlockClass.Block({data: {"star":star,"owner":address}});
                 await this._addBlock(block);
                 resolve(block);
             }else{
-                reject(new Error('failed to verify message'));
+                reject();
             }
           }else{
-              reject(new Error('it has beeen greater than 5 minutes'));
+              reject();
           }
         });
     }
@@ -240,6 +240,7 @@ class Blockchain {
                   errorLog.push(error);
               }
             })
+            resolve(errorLog);
         });
 
     }
