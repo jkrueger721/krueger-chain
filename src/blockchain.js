@@ -124,8 +124,7 @@ class Blockchain {
           let messageTime =  parseInt(message.split(':')[1]);
           let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
           let timeDifference = currentTime - messageTime; 
-          //if(timeDifference <= 300){
-              if(true){
+          if(timeDifference <= 300){
               console.log(timeDifference);
             if(bitcoinMessage.verify(message, address, signature)){
                 let block = new BlockClass.Block({"star":star,"owner":address});
@@ -134,8 +133,8 @@ class Blockchain {
             }else{
                 reject();
             }
-        //   }else{
-        //       reject(new Error('has been more than 5 mins'));
+          }else{
+              reject(new Error('has been more than 5 mins'));
           }
         });
     }
