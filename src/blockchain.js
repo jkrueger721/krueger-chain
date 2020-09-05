@@ -128,7 +128,7 @@ class Blockchain {
               if(true){
               console.log(timeDifference);
             if(bitcoinMessage.verify(message, address, signature)){
-                let block = new BlockClass.Block({data: {"star":star,"owner":address}});
+                let block = new BlockClass.Block({"star":star,"owner":address});
                 await this._addBlock(block);
                 resolve(block);
             }else{
