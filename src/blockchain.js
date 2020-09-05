@@ -61,34 +61,6 @@ class Blockchain {
      * Note: the symbol `_` in the method name indicates in the javascript convention 
      * that this method is a private method. 
      */
-    // _addBlock(block) {
-    //     let self = this;
-    //     return new Promise(async (resolve, reject) => {
-    //        // get the current chain height       
-    //        let chainHeight = this.getChainHeight();
-    //        // get the lst block using chain heigh
-    //        let prevBlock = this.getBlockByHeight(chainHeight);
-    //        //set var for last block's heigh
-    //        let prevBlockHeight = prevBlock.height;
-    //        // set current block's time stamp
-    //        block.time = new Date().getTime().toString().slice(0,-3);
-    //        block.previousBlockHash = prevBlock.hash;
-    //        //block.height = prevBlockHeight + 1;
-            
-    //         if(block.height <= prevBlockHeight)
-    //         {
-    //            reject(new error("this block is not in correct place check block height"));
-    //         }else{
-    //             block.hash = SHA256(JSON.stringify(block)).toString();
-    //             console.log(block);
-    //             self.chain.push(block);
-    //             self.height = chainHeight + 1;
-
-    //             resolve();
-    //         }
-    //     });
-        
-    // }
     _addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
@@ -152,7 +124,9 @@ class Blockchain {
           let messageTime =  parseInt(message.split(':')[1]);
           let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
           let timeDifference = currentTime - messageTime; 
-          if(timeDifference >= 300){
+          //if(timeDifference <= 300){
+              if(true){
+              console.log(timeDifference);
             if(bitcoinMessage.verify(message, address, signature)){
                 let block = new BlockClass.Block({data: {"star":star,"owner":address}});
                 await this._addBlock(block);
@@ -160,8 +134,8 @@ class Blockchain {
             }else{
                 reject();
             }
-          }else{
-              reject();
+        //   }else{
+        //       reject(new Error('has been more than 5 mins'));
           }
         });
     }
@@ -177,7 +151,6 @@ class Blockchain {
         return new Promise((resolve, reject) => {
                 try {
                 const currentBlock = self.chain.filter(block => block.hash === hash)[0];
-                console.log(currentBlock);
                 resolve(currentBlock);
             } catch (error) {
                 reject(error);
@@ -211,16 +184,22 @@ class Blockchain {
     getStarsByWalletAddress (address) {
         let self = this;
         let stars = [];
-        return new Promise((resolve, reject) => {
-           self.chain.forEach(b => {
-              let data = b.getBData();
+        console.log(address);
+        return new Promise( async(resolve, reject) => {
+             self.chain.forEach((b)=> {
+              let data =  b.getBData();
+              console.log('im outside the if statment');
               if(data){
                   if(data.owner === address){
-                      stars.push(data);
+                    console.log("im in the if statement!");
+                    stars.push(data);
+                    console.log(stars[0]);
+                    
                   }
               }
           })
-          resolve(stars);
+         // return stars;
+         resolve(stars);
         });
     }
 

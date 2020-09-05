@@ -47,7 +47,7 @@ class Block {
             self.hash = currentBlockHash;
             if(currentBlockHash != checkHash){
             // Returning the Block is not valid
-                reject(new error(currentBlockHash + " does not equal " + checkHash));
+                reject(new Error(currentBlockHash + " does not equal " + checkHash));
             }else{
                 // Returning the Block is valid
                 resolve(self);
@@ -74,10 +74,8 @@ class Block {
         // Parse the data to an object to be retrieve.
         let dataObject = JSON.parse(decodedData);
         // Resolve with the data if the object isn't the Genesis block
-            if(self.height != 0){
+            if(dataObject && self.height != 0){
                 resolve(dataObject);
-            }else{
-                reject(new Error("this is Genesis block"));
             }
          });
       
