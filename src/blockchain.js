@@ -125,14 +125,13 @@ class Blockchain {
           let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
           let timeDifference = currentTime - messageTime; 
           if(timeDifference <= 300){
-              console.log(timeDifference);
-            if(bitcoinMessage.verify(message, address, signature)){
-                let block = new BlockClass.Block({"star":star,"owner":address});
-                await this._addBlock(block);
-                resolve(block);
-            }else{
-                reject();
-            }
+                if(bitcoinMessage.verify(message, address, signature)){
+                    let block = new BlockClass.Block({"star":star,"owner":address});
+                    await this._addBlock(block);
+                    resolve(block);
+                }else{
+                    reject();
+                }
           }else{
               reject(new Error('has been more than 5 mins'));
           }
@@ -215,7 +214,6 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             await Promise.all(
             self.chain.map(async(b) => {
-                console.log(b)
             let prevBlockHash = self.chain[b.height - 1]; 
               if(await b.validate())
               {  if(b.height === 0){
