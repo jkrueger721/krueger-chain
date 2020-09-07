@@ -215,9 +215,20 @@ class Blockchain {
             //await Promise.all(
             self.chain.forEach(async(b) => {
             let prevBlockHash = self.chain[b.height - 1]; 
+            console.log("this prevBlock: ");
+            console.log(prevBlockHash);
+
+            console.log("this is currentblock: ");
+            console.log(b);
+
               if(await b.validate())
-              {  
-    
+              { 
+                 if(b.height != 0){
+                        if(b.hash !== prevBlockHash.hash){
+                        errorLog.push(new Error(b + " doesnt have correct place in chain"));
+                    }
+                 }  
+                 
               }else{
                   errorLog.push(new Error(b + " isn't validated"));
               }
