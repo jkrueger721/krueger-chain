@@ -197,7 +197,7 @@ class Blockchain {
                   }
               }
           })
-         // return stars;
+         // this.validateChain();
          resolve(stars);
         });
     }
@@ -208,16 +208,26 @@ class Blockchain {
      * 1. You should validate each block using `validateBlock`
      * 2. Each Block should check the with the previousBlockHash
      */
+
     validateChain() {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            self.chain.forEach(b => {
-              let block =  b.validate();
-              if(block.reject){
-                  errorLog.push(error);
+            await Promise.all(
+            self.chain.map(async(b) => {
+                console.log(b)
+            let prevBlockHash = self.chain[b.height - 1]; 
+              if(await b.validate())
+              {  if(b.height === 0){
+                await b.validate() ? true : errorLog.push("Genesis block does not validate");
               }
-            })
+                  else if(b.hash !== prevBlockHash.hash){
+                     errorLog.push(new Error(b + " doesnt have correct place in chain"));
+                 }
+              }else{
+                  errorLog.push(new Error(b + " isn't validated"));
+              }
+            }));
             resolve(errorLog);
         });
 
