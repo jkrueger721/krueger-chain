@@ -121,6 +121,7 @@ class BlockchainController {
             
         });
     }
+    //code for this endpoint found at https://knowledge.udacity.com/questions/238367
     validateBlockchain() { this.app.get("/validateblkchain", async (req, res) =>
     { 
         

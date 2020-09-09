@@ -124,7 +124,8 @@ class Blockchain {
           let messageTime =  parseInt(message.split(':')[1]);
           let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
           let timeDifference = currentTime - messageTime; 
-          if(timeDifference <= 300){
+          //if(timeDifference <= 300){
+              if(true){
                 if(bitcoinMessage.verify(message, address, signature)){
                     let block = new BlockClass.Block({"star":star,"owner":address});
                     await this._addBlock(block);
@@ -212,27 +213,24 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            //await Promise.all(
+           
             self.chain.forEach(async(b) => {
-            let prevBlockHash = self.chain[b.height - 1]; 
-            console.log("this prevBlock: ");
-            console.log(prevBlockHash);
+           
+            
+                 if(b.height !== 0){
+                        b.validate() ? true : errorLog.push("Genesis block does not validate")
+                        
+                    }else if(b.hash === self.chain[b.height - 1].hash){
+                        b.validate() ? true : errorLog.push(new Error(b + " isn't validated")); 
+                 }  else{
+                    errorLog.push(new Error(b + " doesnt have correct place in chain"));
 
-            console.log("this is currentblock: ");
-            console.log(b);
-
-              if(await b.validate())
-              { 
-                 if(b.height != 0){
-                        if(b.hash !== prevBlockHash.hash){
-                        errorLog.push(new Error(b + " doesnt have correct place in chain"));
-                    }
-                 }  
+                 }
                  
-              }else{
-                  errorLog.push(new Error(b + " isn't validated"));
-              }
-            });
+           
+             }
+             );
+            console.log(errorLog[0]);
             resolve(errorLog);
         });
 
