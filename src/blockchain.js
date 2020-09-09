@@ -124,8 +124,7 @@ class Blockchain {
           let messageTime =  parseInt(message.split(':')[1]);
           let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
           let timeDifference = currentTime - messageTime; 
-          //if(timeDifference <= 300){
-              if(true){
+          if(timeDifference <= 300){
                 if(bitcoinMessage.verify(message, address, signature)){
                     let block = new BlockClass.Block({"star":star,"owner":address});
                     await this._addBlock(block);
@@ -187,13 +186,10 @@ class Blockchain {
         return new Promise((resolve, reject) => {
              self.chain.forEach(async(b)=> {
               let data = await b.getBData();
-              console.log('im outside the if statment');
               if(data){
                   if(data.owner === address){
-                    console.log("im in the if statement!");
                     stars.push(data);
                     console.log(stars[0]);
-                    
                   }
               }
           })
@@ -226,11 +222,8 @@ class Blockchain {
                     errorLog.push(new Error(b + " doesnt have correct place in chain"));
 
                  }
-                 
            
-             }
-             );
-            console.log(errorLog[0]);
+             });
             resolve(errorLog);
         });
 
