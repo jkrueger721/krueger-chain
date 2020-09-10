@@ -69,26 +69,25 @@ class Blockchain {
             BlockObj.time = new Date().getTime().toString().slice(0,-3);
            if (height >= 0)
            {
+               BlockObj.height = height + 1;
                let previousBlock = self.chain[self.height];
                BlockObj.previousBlockHash = previousBlock.hash;
                BlockObj.hash = SHA256(JSON.stringify(BlockObj)).toString();
                 self.chain.push(BlockObj);
+                self.height = self.chain.length -1;
                 resolve(BlockObj);
            }
            else
            {
-            //BlockObj.height = height + 1;
+            BlockObj.height = height + 1;
             BlockObj.hash = SHA256(JSON.stringify(BlockObj)).toString();
                 self.chain.push(BlockObj);
-               // self.height = self.chain.length - 1;
+                self.height = self.chain.length - 1;
                 resolve(BlockObj);
            }
-           BlockObj.height = height + 1;
-           self.height = self.chain.length - 1;
-
-
         });
     }
+    
     /**
      * The requestMessageOwnershipVerification(address) method
      * will allow you  to request a message that you will use to
@@ -211,7 +210,9 @@ class Blockchain {
            
             self.chain.forEach(async(b) => {
                  if(b.height === 0){
-                      await  b.validate() ? true : errorLog.push("Genesis block does not validate")
+                       await  b.validate() ? true : errorLog.push("Genesis block does not validate")
+                     // errorLog.push("Genesis block does not validate")
+
                     }
                      else if( b.previousBlockHash === self.chain[b.height - 1].hash){
                       await  b.validate() ? true : errorLog.push(new Error(b + " isn't validated")); 

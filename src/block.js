@@ -50,6 +50,7 @@ class Block {
                 reject(new Error(currentBlockHash + " does not equal " + checkHash));
             }else{
                 // Returning the Block is valid
+
                 resolve(self);
             }
         });
