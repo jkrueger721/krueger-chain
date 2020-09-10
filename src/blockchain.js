@@ -213,15 +213,12 @@ class Blockchain {
             self.chain.forEach(async(b) => {
            
             
-                 if(b.height !== 0){
-                        b.validate() ? true : errorLog.push("Genesis block does not validate")
-                        
-                    }else if(b.hash === self.chain[b.height - 1].hash){
-                        b.validate() ? true : errorLog.push(new Error(b + " isn't validated")); 
-                 }  else{
-                    errorLog.push(new Error(b + " doesnt have correct place in chain"));
-
-                 }
+                 if(b.height === 0){
+                      await  b.validate() ? true : errorLog.push("Genesis block does not validate")
+                    }
+                     else if( b.previousBlockHash === self.chain[b.height - 1].hash){
+                      await  b.validate() ? true : errorLog.push(new Error(b + " isn't validated")); 
+                 } 
            
              });
             resolve(errorLog);
