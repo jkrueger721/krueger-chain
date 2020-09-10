@@ -69,22 +69,24 @@ class Blockchain {
             BlockObj.time = new Date().getTime().toString().slice(0,-3);
            if (height >= 0)
            {
-               BlockObj.height = height + 1;
                let previousBlock = self.chain[self.height];
                BlockObj.previousBlockHash = previousBlock.hash;
                BlockObj.hash = SHA256(JSON.stringify(BlockObj)).toString();
                 self.chain.push(BlockObj);
-                self.height = self.chain.length -1;
                 resolve(BlockObj);
            }
            else
            {
-            BlockObj.height = height + 1;
+            //BlockObj.height = height + 1;
             BlockObj.hash = SHA256(JSON.stringify(BlockObj)).toString();
                 self.chain.push(BlockObj);
-                self.height = self.chain.length - 1;
+               // self.height = self.chain.length - 1;
                 resolve(BlockObj);
            }
+           BlockObj.height = height + 1;
+           self.height = self.chain.length - 1;
+
+
         });
     }
     /**
@@ -182,18 +184,15 @@ class Blockchain {
     getStarsByWalletAddress(address) {
         let self = this;
         let stars = [];
-        console.log(address);
         return new Promise((resolve, reject) => {
              self.chain.forEach(async(b)=> {
               let data = await b.getBData();
               if(data){
                   if(data.owner === address){
                     stars.push(data);
-                    console.log(stars[0]);
                   }
               }
           })
-         // this.validateChain();
          resolve(stars);
         });
     }
@@ -211,8 +210,6 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
            
             self.chain.forEach(async(b) => {
-           
-            
                  if(b.height === 0){
                       await  b.validate() ? true : errorLog.push("Genesis block does not validate")
                     }
